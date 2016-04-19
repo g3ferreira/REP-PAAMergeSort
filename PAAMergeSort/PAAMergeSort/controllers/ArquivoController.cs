@@ -75,33 +75,15 @@ namespace PAAMergeSort.controllers
                 {
                     int numBytesToRead = (int)bytesToRead.Length;
 
-                    int posicao = numBytesToRead;
+                    int posicaoAtual = numBytesToRead;
 
                     for (int i = 1; i <= quantidadeArquivos; i++)
                     {
-                        switch (i)
-                        {
-                            case 1:
-                                Console.WriteLine("posicao: " + 0);
-                                fsSource.Seek(0, SeekOrigin.Begin);
-                                break;
-
-                            case 2:
-                                posicao = posicao + 1;
-                                Console.WriteLine("Bytesto read: " + numBytesToRead);
-                                Console.WriteLine("posicao: " + posicao);
-                                fsSource.Seek(posicao, SeekOrigin.Begin);
-                                break;
-
-                            default:
-                                posicao = (posicao + numBytesToRead);
-                                Console.WriteLine("posicao: " + posicao);
-                                fsSource.Seek(posicao, SeekOrigin.Begin);
-                                break;
-                        }
-
+                        posicaoAtual = getPosicao(i, posicaoAtual, numBytesToRead);
+                        fsSource.Seek(posicaoAtual, SeekOrigin.Begin);
                         int numBytesRead = 0;
                         numBytesToRead = (int)bytesToRead.Length;
+
                         while (numBytesToRead > 0)
                         {
                             int n = fsSource.Read(bytesToRead, numBytesRead, numBytesToRead);
@@ -114,29 +96,10 @@ namespace PAAMergeSort.controllers
 
                         numBytesToRead = bytesToRead.Length;
                         string result = System.Text.Encoding.UTF8.GetString(bytesToRead);
-
-                        //  string result = "-10-1-2-3-4-5-6-7-8-9-10-";
-
-                        if ((result.StartsWith("-") && (result.StartsWith("-"))))
-                        {
-                            result = result.Substring(1, result.Length - 2);
-                        }
-                        else if (result.StartsWith("-"))
-                        {
-                            result = result.Substring(1);
-                        }
-                        else if (result.EndsWith("-"))
-                        {
-                            result = result.Substring(0, result.Length - 1);
-                        }
-
-
+                        result = retirarSeparador(result);
                         int[] numeros = Array.ConvertAll(result.Split('-'), b => Convert.ToInt32(b));
                         mergeSortController.mergeSortRecursivo(numeros, 0, numeros.Length - 1);
-                        string caminhoArquivoOrdenado = caminhoArquivoEscrita + @"\arquivo-ordernado-" + i + ".txt";
-                        File.WriteAllText(caminhoArquivoOrdenado, String.Join("-", numeros.Select(x => x.ToString())));
-                        Utils.logList.Add("Arquivo: " + caminhoArquivoOrdenado + "    Criado!!");
-
+                        escreverNumerosArquivo(numeros, caminhoArquivoEscrita, i);
                     }
                 }
             }
@@ -145,6 +108,63 @@ namespace PAAMergeSort.controllers
                 Console.WriteLine(ioEx.Message);
             }
 
+
+        }
+
+        public void escreverNumerosArquivo(int[] numeros, string caminhoArquivoEscrita, int contadorArquivo)
+        {
+            string caminhoArquivoOrdenado = caminhoArquivoEscrita + @"\arquivo-ordernado-" + contadorArquivo + ".txt";
+            File.WriteAllText(caminhoArquivoOrdenado, String.Join("-", numeros.Select(x => x.ToString())));
+            Utils.logList.Add("Arquivo: " + caminhoArquivoOrdenado + "    Criado!!");
+
+        }
+
+        public int getPosicao(int contadorPosicao, int posicaoAtual, int numeroBytesLeitura)
+        {
+            int posicaoIniciarLeitura = 0;
+            switch (contadorPosicao)
+            {
+                case 1:
+                    Console.WriteLine("Posicao Atual: " + posicaoAtual);
+                    Console.WriteLine("posicaoAtual: " + 0);
+                    posicaoIniciarLeitura = 0;
+                    break;
+
+                case 2:
+                    posicaoIniciarLeitura = posicaoAtual + numeroBytesLeitura + 1;
+                    Console.WriteLine("Numero de Bytes Para Leitura: " + numeroBytesLeitura);
+                    Console.WriteLine("Posicao Atual: " + posicaoAtual);
+                    Console.WriteLine("Posicao Iniciar Leitura: " + posicaoIniciarLeitura);
+                    break;
+
+                default:
+                    posicaoIniciarLeitura = (posicaoAtual + numeroBytesLeitura);
+                    Console.WriteLine("Posicao Atual: " + posicaoAtual);
+                    Console.WriteLine("Posicao Iniciar Leitura: " + posicaoIniciarLeitura);
+                    break;
+            }
+
+            return posicaoIniciarLeitura;
+
+
+        }
+
+        public string retirarSeparador(string numerosComSeparador)
+        {
+            if ((numerosComSeparador.StartsWith("-") && (numerosComSeparador.StartsWith("-"))))
+            {
+                numerosComSeparador = numerosComSeparador.Substring(1, numerosComSeparador.Length - 2);
+            }
+            else if (numerosComSeparador.StartsWith("-"))
+            {
+                numerosComSeparador = numerosComSeparador.Substring(1);
+            }
+            else if (numerosComSeparador.EndsWith("-"))
+            {
+                numerosComSeparador = numerosComSeparador.Substring(0, numerosComSeparador.Length - 1);
+            }
+
+            return numerosComSeparador;
 
         }
 

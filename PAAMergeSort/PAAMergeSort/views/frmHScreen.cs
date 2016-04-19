@@ -132,7 +132,6 @@ namespace PAAMergeSort
         {
             try
             {
-
                 if (validateParameters())
                 {
                     criarArquivosByMB(txtArquiGB.Text.Trim(), txtTamMEM.Text.Trim(), txtArqOrd.Text);
@@ -147,7 +146,6 @@ namespace PAAMergeSort
             catch (Exception ex)
             {
                 Utils.logList.Add("ERROR: " + ex.Message);
-
             }
 
         }
@@ -157,7 +155,7 @@ namespace PAAMergeSort
             threadMergeSort = new Thread(new ThreadStart(this.iniciarMergeSort));
             threadMergeSort.IsBackground = true;
             threadMergeSort.Start();
-            Utils.logList.Add("| Thread MergeSort Started !");
+            Utils.logList.Add("|> Thread MergeSort Started !");
 
         }
 
@@ -168,7 +166,6 @@ namespace PAAMergeSort
         public void lerEscreverArquivoByBytes(string caminhoArquivoLeitura, string caminhoArquivoEscrita, string tamArquivoLeitura, string tamArquivoSecundario)
         {
             arquivoController.lerEscreverArquivo(caminhoArquivoLeitura, caminhoArquivoEscrita, tamArquivoLeitura, tamArquivoSecundario);
-
         }
 
 
@@ -214,9 +211,7 @@ namespace PAAMergeSort
 
         private void frmHomeScreen_Load(object sender, EventArgs e)
         {
-
             updateLog();
-
         }
 
     
