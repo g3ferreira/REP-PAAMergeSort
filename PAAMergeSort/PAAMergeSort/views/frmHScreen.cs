@@ -44,6 +44,7 @@ namespace PAAMergeSort
             txtArqOrd.Text = @"D:\genilson-ferreira\documents\faculdade\paa\trabalho\arquivos";
             txtTamMEM.Text = "100";
             txtArquiGB.Text = "2";
+            txtK.Text = "2";
         }
 
         public void AppendLogMessage(List<String> logList)
@@ -136,7 +137,7 @@ namespace PAAMergeSort
                 {
                     criarArquivosByMB(txtArquiGB.Text.Trim(), txtTamMEM.Text.Trim(), txtArqOrd.Text);
                     //lerArquivoTodo();
-                    lerEscreverArquivoByBytes(txtArqDes.Text.Trim(), txtArqOrd.Text.Trim(), txtArquiGB.Text.Trim(), txtTamMEM.Text.Trim());
+                    lerEscreverArquivoByBytes(txtArqDes.Text.Trim(), txtArqOrd.Text.Trim(), txtArquiGB.Text.Trim(), txtTamMEM.Text.Trim(), txtK.Text.Trim());
                 }
                 else
                 {
@@ -163,11 +164,10 @@ namespace PAAMergeSort
         {
             //  arquivoController.criarArquivos(Convert.ToInt32(tamArquivo),Convert.ToInt32(tamanhoMB), caminhoPastaArquivo);
         }
-        public void lerEscreverArquivoByBytes(string caminhoArquivoLeitura, string caminhoArquivoEscrita, string tamArquivoLeitura, string tamArquivoSecundario)
+        public void lerEscreverArquivoByBytes(string caminhoArquivoLeitura, string caminhoArquivoEscrita, string tamArquivoLeitura, string tamArquivoSecundario, string KVetores)
         {
-            arquivoController.lerEscreverArquivo(caminhoArquivoLeitura, caminhoArquivoEscrita, tamArquivoLeitura, tamArquivoSecundario);
+            arquivoController.lerEscreverArquivo(caminhoArquivoLeitura, caminhoArquivoEscrita, tamArquivoLeitura, tamArquivoSecundario, KVetores);
         }
-
 
         public void lerArquivoTodo()
         {

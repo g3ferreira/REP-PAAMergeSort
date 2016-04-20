@@ -47,10 +47,9 @@ namespace PAAMergeSort.controllers
         }
 
 
-        public void lerEscreverArquivo(string caminhoArquivoLeitura, string caminhoArquivoEscrita, string tamArquivoPrincipal, string tamArquivoSecundario)
+        public void lerEscreverArquivo(string caminhoArquivoLeitura, string caminhoArquivoEscrita, string tamArquivoPrincipal, string tamArquivoSecundario, string KVetores)
         {
-
-
+            int KVEtores = Convert.ToInt32(KVetores);
             int quantidadeBytes = Convert.ToInt32(tamArquivoSecundario) * (1024 ^ 2);
             byte[] bytesToRead = new byte[quantidadeBytes];
 
@@ -59,61 +58,166 @@ namespace PAAMergeSort.controllers
 
 
             double quantidadeArquivosDouble = (double)(Convert.ToInt32(tamArquivoPrincipal) * 1024) / (double)Convert.ToInt32(tamArquivoSecundario);
-            int quantidadeArquivos = 0;
+            int quantidadeArquivosSecudarios = (int) quantidadeArquivosDouble;
 
-            if (quantidadeArquivosDouble < (quantidadeArquivosDouble + 0.1))
+            if (!(quantidadeArquivosSecudarios == quantidadeArquivosDouble))
             {
-                quantidadeArquivos = Convert.ToInt32(Math.Round(quantidadeArquivosDouble + 1));
+                quantidadeArquivosSecudarios++;
             }
 
-            Utils.logList.Add("Serão Criados " + quantidadeArquivos + " Arquivos Secundários de: " + tamArquivoSecundario + "KB");
 
+            Utils.logList.Add("Serão Criados " + quantidadeArquivosSecudarios + " Arquivos Secundários de: " + tamArquivoSecundario + "KB");
 
             try
             {
-                using (FileStream fsSource = new FileStream(caminhoArquivoLeitura, FileMode.Open, FileAccess.Read))
-                {
-                    int numBytesToRead = (int)bytesToRead.Length;
-
-                    int posicaoAtual = numBytesToRead;
-
-                    for (int i = 1; i <= quantidadeArquivos; i++)
-                    {
-                        posicaoAtual = getPosicao(i, posicaoAtual, numBytesToRead);
-                        fsSource.Seek(posicaoAtual, SeekOrigin.Begin);
-                        int numBytesRead = 0;
-                        numBytesToRead = (int)bytesToRead.Length;
-
-                        while (numBytesToRead > 0)
-                        {
-                            int n = fsSource.Read(bytesToRead, numBytesRead, numBytesToRead);
-
-                            if (n == 0) break;
-
-                            numBytesRead += n;
-                            numBytesToRead -= n;
-                        }
-
-                        numBytesToRead = bytesToRead.Length;
-                        string result = System.Text.Encoding.UTF8.GetString(bytesToRead);
-                        result = retirarSeparador(result);
-                        int[] numeros = Array.ConvertAll(result.Split('-'), b => Convert.ToInt32(b));
-                        mergeSortController.mergeSortRecursivo(numeros, 0, numeros.Length - 1);
-                        escreverNumerosArquivo(numeros, caminhoArquivoEscrita, i);
-                    }
-                }
+                separarArquivoSecundarios(caminhoArquivoLeitura, caminhoArquivoEscrita, bytesToRead, quantidadeArquivosSecudarios);
+                combinarArquivosSecundariosByKVetores(quantidadeArquivosSecudarios, KVEtores, caminhoArquivoEscrita + @"\arquivos-secundarios-ordenados", caminhoArquivoEscrita + @"\arquivos-combinados-ordenados", bytesToRead);
             }
             catch (FileNotFoundException ioEx)
             {
                 Console.WriteLine(ioEx.Message);
             }
 
-
         }
 
-        public void escreverNumerosArquivo(int[] numeros, string caminhoArquivoEscrita, int contadorArquivo)
+        public void separarArquivoSecundarios(string caminhoArquivoLeitura, string caminhoArquivoEscrita, byte[] bytesToRead, int quantidadeArquivosSecudarios)
         {
-            string caminhoArquivoOrdenado = caminhoArquivoEscrita + @"\arquivo-ordernado-" + contadorArquivo + ".txt";
+            using (FileStream fsSource = new FileStream(caminhoArquivoLeitura, FileMode.Open, FileAccess.Read))
+            {
+                int numBytesToRead = (int)bytesToRead.Length;
+
+                int posicaoAtual = numBytesToRead;
+
+                for (int i = 1; i <= quantidadeArquivosSecudarios; i++)
+                {
+                    posicaoAtual = getPosicao(i, posicaoAtual, numBytesToRead);
+                    fsSource.Seek(posicaoAtual, SeekOrigin.Begin);
+                    int numBytesRead = 0;
+                    numBytesToRead = (int)bytesToRead.Length;
+
+                    while (numBytesToRead > 0)
+                    {
+                        int n = fsSource.Read(bytesToRead, numBytesRead, numBytesToRead);
+
+                        if (n == 0) break;
+
+                        numBytesRead += n;
+                        numBytesToRead -= n;
+                    }
+
+                    numBytesToRead = bytesToRead.Length;
+                    string result = System.Text.Encoding.UTF8.GetString(bytesToRead);
+                    result = retirarSeparador(result);
+                    int[] numeros = Array.ConvertAll(result.Split('-'), b => Convert.ToInt32(b));
+                    mergeSortController.mergeSortRecursivo(numeros, 0, numeros.Length - 1);
+                    escreverNumerosArquivo(numeros, caminhoArquivoEscrita + @"\arquivos-secundarios-ordenados", @"\arquivo-secundario-ordernado", i);
+
+                }
+            }
+
+        
+        }
+        public void combinarArquivosSecundariosByKVetores(int quantidadeArquivosCriados, int KVetores, string caminhoArquivoLeitura, string caminhoArquivoEscrita, byte[] bytesToRead)
+        {
+
+            int numBytesToRead = (int)bytesToRead.Length;
+
+            int posicaoAtual = numBytesToRead;
+            int[] vetorArquivoPrimario;
+            int[] vetorArquivoSecudario;
+            int contadorArquivoCombinado = 1;
+            int combinacoes =1;
+
+            double quantidadeDeCombinacoesDouble = (double)quantidadeArquivosCriados / (double) KVetores;
+            int quantidadeDeCombinacoes = (int)quantidadeDeCombinacoesDouble;
+
+            if (!(quantidadeDeCombinacoes == quantidadeDeCombinacoesDouble))
+            {
+                quantidadeDeCombinacoes ++;
+            }
+
+            Console.WriteLine("Quantidade de Combinacoes: " + quantidadeDeCombinacoes);
+            int i =1 ;
+
+            for (; combinacoes <= quantidadeDeCombinacoes; combinacoes++)
+            {
+                Console.WriteLine("Arquivo Primario a Combinar: " + i);
+                Console.WriteLine("Arquivo Secundario a Combinar: " + (i+1));
+
+                using (FileStream fsSource = new FileStream(caminhoArquivoLeitura + @"\arquivo-secundario-ordernado-" + i + ".txt", FileMode.Open, FileAccess.Read))
+                {
+                    posicaoAtual = getPosicao(i, posicaoAtual, numBytesToRead);
+                    fsSource.Seek(posicaoAtual, SeekOrigin.Begin);
+                    int numBytesRead = 0;
+                    numBytesToRead = (int)bytesToRead.Length;
+
+                    while (numBytesToRead > 0)
+                    {
+                        int n = fsSource.Read(bytesToRead, numBytesRead, numBytesToRead);
+                        if (n == 0) break;
+
+                        numBytesRead += n;
+                        numBytesToRead -= n;
+                    }
+
+                    numBytesToRead = bytesToRead.Length;
+                    string result = System.Text.Encoding.UTF8.GetString(bytesToRead);
+                    result = retirarSeparador(result);
+                    vetorArquivoPrimario = Array.ConvertAll(result.Split('-'), b => Convert.ToInt32(b));
+                    fsSource.Close();
+                }
+
+                if (i == ((quantidadeDeCombinacoes+combinacoes)-1))
+                {
+                    string caminhoArquivoNaoCombinado = caminhoArquivoLeitura + @"\arquivo-secundario-ordernado-" + i + ".txt";
+                    Utils.logList.Add("Arquivo Nao Combinado: " + caminhoArquivoNaoCombinado);
+                    File.Copy(caminhoArquivoNaoCombinado, caminhoArquivoEscrita + @"\arquivos-combinados-ordenados\arquivo-secundario-ordernado-" + i + ".txt");
+                    break;  
+                } 
+
+                using (FileStream fsSecundario = new FileStream(caminhoArquivoLeitura + @"\arquivo-secundario-ordernado-" +(i+1)+ ".txt", FileMode.Open, FileAccess.Read))
+                {
+                    posicaoAtual = getPosicao(i, posicaoAtual, numBytesToRead);
+                    fsSecundario.Seek(posicaoAtual, SeekOrigin.Begin);
+                    int numBytesRead = 0;
+                    numBytesToRead = (int)bytesToRead.Length;
+
+                    while (numBytesToRead > 0)
+                    {
+                        int n = fsSecundario.Read(bytesToRead, numBytesRead, numBytesToRead);
+                        if (n == 0) break;
+
+                        numBytesRead += n;
+                        numBytesToRead -= n;
+                    }
+
+                    numBytesToRead = bytesToRead.Length;
+                    string result = System.Text.Encoding.UTF8.GetString(bytesToRead);
+                    result = retirarSeparador(result);
+                    vetorArquivoSecudario = Array.ConvertAll(result.Split('-'), b => Convert.ToInt32(b));
+                    fsSecundario.Close();
+                }
+
+                int[] vetorResultadoCombinacao = new int[vetorArquivoPrimario.Length + vetorArquivoSecudario.Length];
+                vetorArquivoPrimario.CopyTo(vetorResultadoCombinacao, 0);
+                vetorArquivoSecudario.CopyTo(vetorResultadoCombinacao, vetorArquivoPrimario.Length);
+
+                mergeSortController.mergeSortRecursivo(vetorResultadoCombinacao, 0, vetorResultadoCombinacao.Length - 1);
+                escreverNumerosArquivo(vetorResultadoCombinacao, caminhoArquivoEscrita + @"\arquivos-combinados-ordenados", @"\arquivos-combinados-ordenados", contadorArquivoCombinado);
+
+
+                contadorArquivoCombinado++;               
+                i = i + 2;
+            }
+                      
+        
+        }
+
+        public void escreverNumerosArquivo(int[] numeros, string caminhoArquivoEscritaPasta, string nomeArquivo, int contadorArquivo)
+        {
+            if(!Directory.Exists(caminhoArquivoEscritaPasta))   Directory.CreateDirectory(caminhoArquivoEscritaPasta);        
+
+            string caminhoArquivoOrdenado = caminhoArquivoEscritaPasta +nomeArquivo + "-" +contadorArquivo + ".txt";
             File.WriteAllText(caminhoArquivoOrdenado, String.Join("-", numeros.Select(x => x.ToString())));
             Utils.logList.Add("Arquivo: " + caminhoArquivoOrdenado + "    Criado!!");
 
@@ -125,22 +229,22 @@ namespace PAAMergeSort.controllers
             switch (contadorPosicao)
             {
                 case 1:
-                    Console.WriteLine("Posicao Atual: " + posicaoAtual);
-                    Console.WriteLine("posicaoAtual: " + 0);
+                   // Console.WriteLine("Posicao Atual: " + posicaoAtual);
+                   // Console.WriteLine("posicaoAtual: " + 0);
                     posicaoIniciarLeitura = 0;
                     break;
 
                 case 2:
                     posicaoIniciarLeitura = posicaoAtual + numeroBytesLeitura + 1;
-                    Console.WriteLine("Numero de Bytes Para Leitura: " + numeroBytesLeitura);
-                    Console.WriteLine("Posicao Atual: " + posicaoAtual);
-                    Console.WriteLine("Posicao Iniciar Leitura: " + posicaoIniciarLeitura);
+                   // Console.WriteLine("Numero de Bytes Para Leitura: " + numeroBytesLeitura);
+                   // Console.WriteLine("Posicao Atual: " + posicaoAtual);
+                   // Console.WriteLine("Posicao Iniciar Leitura: " + posicaoIniciarLeitura);
                     break;
 
                 default:
                     posicaoIniciarLeitura = (posicaoAtual + numeroBytesLeitura);
-                    Console.WriteLine("Posicao Atual: " + posicaoAtual);
-                    Console.WriteLine("Posicao Iniciar Leitura: " + posicaoIniciarLeitura);
+                  //  Console.WriteLine("Posicao Atual: " + posicaoAtual);
+                  //  Console.WriteLine("Posicao Iniciar Leitura: " + posicaoIniciarLeitura);
                     break;
             }
 
