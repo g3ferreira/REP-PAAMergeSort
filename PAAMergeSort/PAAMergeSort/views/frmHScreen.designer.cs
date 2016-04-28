@@ -30,6 +30,10 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmHomeScreen));
             this.panelHomeScreen = new System.Windows.Forms.Panel();
+            this.lblCronometro = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.txtArquiGB = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.txtK = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -45,8 +49,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.txtArqDes = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.label6 = new System.Windows.Forms.Label();
-            this.txtArquiGB = new System.Windows.Forms.TextBox();
             this.panelHomeScreen.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -55,6 +57,8 @@
             // 
             this.panelHomeScreen.BackColor = System.Drawing.SystemColors.Menu;
             this.panelHomeScreen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelHomeScreen.Controls.Add(this.lblCronometro);
+            this.panelHomeScreen.Controls.Add(this.label8);
             this.panelHomeScreen.Controls.Add(this.label6);
             this.panelHomeScreen.Controls.Add(this.txtArquiGB);
             this.panelHomeScreen.Controls.Add(this.label5);
@@ -74,6 +78,46 @@
             this.panelHomeScreen.Name = "panelHomeScreen";
             this.panelHomeScreen.Size = new System.Drawing.Size(1100, 569);
             this.panelHomeScreen.TabIndex = 1;
+            // 
+            // lblCronometro
+            // 
+            this.lblCronometro.AutoSize = true;
+            this.lblCronometro.Font = new System.Drawing.Font("Trebuchet MS", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCronometro.ForeColor = System.Drawing.Color.Red;
+            this.lblCronometro.Location = new System.Drawing.Point(951, 512);
+            this.lblCronometro.Name = "lblCronometro";
+            this.lblCronometro.Size = new System.Drawing.Size(100, 27);
+            this.lblCronometro.TabIndex = 24;
+            this.lblCronometro.Text = "00:00:00";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Trebuchet MS", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.ForeColor = System.Drawing.Color.Black;
+            this.label8.Location = new System.Drawing.Point(860, 512);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(85, 27);
+            this.label8.TabIndex = 23;
+            this.label8.Text = "Tempo:";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(634, 7);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(169, 22);
+            this.label6.TabIndex = 21;
+            this.label6.Text = "Tam. Aquivo (GB/MB)";
+            // 
+            // txtArquiGB
+            // 
+            this.txtArquiGB.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtArquiGB.Location = new System.Drawing.Point(644, 32);
+            this.txtArquiGB.Name = "txtArquiGB";
+            this.txtArquiGB.Size = new System.Drawing.Size(113, 26);
+            this.txtArquiGB.TabIndex = 20;
             // 
             // label5
             // 
@@ -226,24 +270,6 @@
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(634, 7);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(169, 22);
-            this.label6.TabIndex = 21;
-            this.label6.Text = "Tam. Aquivo (GB/MB)";
-            // 
-            // txtArquiGB
-            // 
-            this.txtArquiGB.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtArquiGB.Location = new System.Drawing.Point(644, 32);
-            this.txtArquiGB.Name = "txtArquiGB";
-            this.txtArquiGB.Size = new System.Drawing.Size(113, 26);
-            this.txtArquiGB.TabIndex = 20;
-            // 
             // frmHomeScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -288,6 +314,8 @@
         private System.Windows.Forms.TextBox txtK;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtArquiGB;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label lblCronometro;
 
 
 

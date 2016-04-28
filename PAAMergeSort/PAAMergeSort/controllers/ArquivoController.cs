@@ -49,6 +49,7 @@ namespace PAAMergeSort.controllers
 
         public void lerEscreverArquivo(string caminhoArquivoLeitura, string caminhoArquivoEscrita, string tamArquivoPrincipal, string tamArquivoSecundario, string KVetores)
         {
+
             int KVEtores = Convert.ToInt32(KVetores);
             int quantidadeBytes = Convert.ToInt32(tamArquivoSecundario) * (1024 ^ 2);
             byte[] bytesToRead = new byte[quantidadeBytes];
@@ -68,15 +69,15 @@ namespace PAAMergeSort.controllers
 
             try
             {
-                 //separarArquivoSecundarios(caminhoArquivoLeitura, caminhoArquivoEscrita, bytesToRead, quantidadeArquivosSecudarios);
-               // combinarArquivosSecundariosByKVetores(quantidadeArquivosSecudarios, KVEtores, caminhoArquivoEscrita + @"\arquivos-secundarios-ordenados", caminhoArquivoEscrita + @"\arquivos-combinados-ordenados", bytesToRead);
-                string arquivoNaoCombinado = @"D:\genilson-ferreira\documents\faculdade\paa\trabalho\arquivos\arquivos-combinados-ordenados\arquivo-secundario-ordernado-21.txt";
-                string caminhoArquivoLeituraB = @"D:\genilson-ferreira\documents\faculdade\paa\trabalho\arquivos\arquivos-combinados-ordenados";
-                int quantidadeCombinacoes = 11;
-                int KVetoresB = 2;
+                separarArquivoSecundarios(caminhoArquivoLeitura, caminhoArquivoEscrita, bytesToRead, quantidadeArquivosSecudarios);
+                combinarArquivosSecundariosByKVetores(quantidadeArquivosSecudarios, KVEtores, caminhoArquivoEscrita + @"\arquivos-secundarios-ordenados", caminhoArquivoEscrita + @"\arquivos-combinados-ordenados", bytesToRead);
+                //string arquivoNaoCombinado = @"D:\genilson-ferreira\documents\faculdade\paa\trabalho\arquivos\arquivos-combinados-ordenados\arquivo-secundario-ordernado-21.txt";
+                // string caminhoArquivoLeituraB = @"D:\genilson-ferreira\documents\faculdade\paa\trabalho\arquivos\arquivos-combinados-ordenados";
+                //int quantidadeCombinacoes = 11;
+                //int KVetoresB = 2;
                 //int bytesToReadB = 102600;
 
-                lerArquivosByAlturaArvore(quantidadeCombinacoes, KVetoresB, arquivoNaoCombinado, caminhoArquivoLeituraB, @"\arquivos-combinados-ordenados", @"\arquivos-combinados-ordenados-H", bytesToRead);
+                //  lerArquivosByAlturaArvore(quantidadeCombinacoes, KVetoresB, arquivoNaoCombinado, caminhoArquivoLeituraB, @"\arquivos-combinados-ordenados", @"\arquivos-combinados-ordenados-H", bytesToRead);
 
             }
             catch (FileNotFoundException ioEx)
@@ -90,6 +91,7 @@ namespace PAAMergeSort.controllers
         {
             using (FileStream fsSource = new FileStream(caminhoArquivoLeitura, FileMode.Open, FileAccess.Read))
             {
+                Console.WriteLine("Tamanho do Arquivo: " + fsSource.Length);
                 int numBytesToRead = (int)bytesToRead.Length;
 
                 int posicaoAtual = 0;
@@ -98,8 +100,14 @@ namespace PAAMergeSort.controllers
                 {
                     posicaoAtual = getPosicao(i, numBytesToRead);
                     fsSource.Seek(posicaoAtual, SeekOrigin.Begin);
+
                     int numBytesRead = 0;
-                    numBytesToRead = (int)bytesToRead.Length;
+                    if (i == quantidadeArquivosSecudarios)
+                    {
+                        int bytesRead = (int)fsSource.Length - posicaoAtual;
+                        bytesToRead = new byte[bytesRead];
+                        numBytesToRead = (int)bytesToRead.Length;
+                    }
 
                     while (numBytesToRead > 0)
                     {
@@ -108,15 +116,22 @@ namespace PAAMergeSort.controllers
                         numBytesRead += n;
                         numBytesToRead -= n;
                     }
-
-                    numBytesToRead = bytesToRead.Length;
-                    string result = System.Text.Encoding.UTF8.GetString(bytesToRead);
-                    result = retirarSeparador(result);
-                    int[] numeros = Array.ConvertAll(result.Split('-'), b => Convert.ToInt32(b));
-                    mergeSortController.mergeSortRecursivo(numeros, 0, numeros.Length - 1);
-                    escreverNumerosArquivo(numeros, caminhoArquivoEscrita + @"\arquivos-secundarios-ordenados", @"\arquivo-secundario-ordernado", i);
-
+                    string result = string.Empty;
+                    try
+                    {
+                        numBytesToRead = bytesToRead.Length;
+                        result = System.Text.Encoding.UTF8.GetString(bytesToRead);
+                        result = retirarSeparador(result.Trim());
+                        int[] numeros = Array.ConvertAll(result.Split('-'), b => Convert.ToInt32(b));
+                        mergeSortController.mergeSortRecursivo(numeros, 0, numeros.Length - 1);
+                        escreverNumerosArquivo(numeros, caminhoArquivoEscrita + @"\arquivos-secundarios-ordenados", @"\arquivo-secundario-ordernado", i);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("error: " + result);
+                    }
                 }
+
             }
 
 
@@ -168,6 +183,7 @@ namespace PAAMergeSort.controllers
                 contadorArquivoLeitura = contadorArquivoLeitura + 2;
             }
 
+            lerArquivosByAlturaArvore(quantidadeDeCombinacoes, KVetores, caminhoArquivoNaoCombinado, caminhoArquivoEscrita, @"\arquivos-combinados-ordenados", @"\arquivos-combinados-ordenados-H", bytesToRead);
 
 
         }
@@ -200,17 +216,13 @@ namespace PAAMergeSort.controllers
 
             if (!(quantidadeDeCombinacoes == 1))
             {
-
-
                 if (quantidadeDeCombinacoes % 2 == 0) // par
                 {
-
                     Console.WriteLine("Combinacoes Par: " + quantidadeDeCombinacoes);
                     Console.WriteLine("Caminho Leitura " + caminhoLeitura);
                     Console.WriteLine("Nomea Arquivo " + nomeArquivob);
                     Console.WriteLine("Arquivo nao combinado" + caminhoArquivoNaoCombinado);
                     Console.WriteLine("Nomea Pasta Escrita " + caminhoEscrita);
-
 
                     caminhoArquivoNaoCombinado = leitura(quantidadeDeCombinacoes, caminhoLeitura, nomeArquivob, caminhoArquivoNaoCombinado, caminhoEscrita, bytesToRead);
 
@@ -223,14 +235,11 @@ namespace PAAMergeSort.controllers
                 }
                 else // impar
                 {
-
                     Console.WriteLine("Combinacoes Impar: " + quantidadeDeCombinacoes);
                     Console.WriteLine("Caminho Leitura " + caminhoLeitura);
                     Console.WriteLine("Nomea Arquivo " + nomeArquivob);
                     Console.WriteLine("Arquivo nao combinado" + caminhoArquivoNaoCombinado);
                     Console.WriteLine("Nomea Pasta Escrita " + caminhoEscrita);
-
-
 
                     caminhoArquivoNaoCombinado = leitura(quantidadeDeCombinacoes, caminhoArquivoLeitura, nomeArquivo + "-", caminhoArquivoNaoCombinado, nomePastaEscrita + quantidadeDeCombinacoes, bytesToRead);
 
@@ -241,22 +250,17 @@ namespace PAAMergeSort.controllers
 
                     lerArquivosByAlturaArvore(quantidadeDeCombinacoes, KVetores, caminhoArquivoNaoCombinado, caminhoLeituraProximo, nomeArquivoProximo, nomeProximaPastaEscrita, bytesToRead);
 
-                    //lerArquivosByAlturaArvore(quantidadeDeCombinacoes, KVetores, caminhoArquivoNaoCombinado, caminhoArquivoLeitura + nomePastaEscrita, nomeArquivo + quantidadeDeCombinacoes, nomePastaEscrita + quantidadeDeCombinacoes, bytesToRead);
-
-
                 }
-
 
             }
             else
             {
-
                 int[] vetorArquivoPrimario = null;
                 int[] vetorArquivoSecudario = null;
                 int[] vetorResultadoCombinacao = null;
 
                 DirectoryInfo di = new DirectoryInfo(caminhoArquivoLeitura);
-                string ultimoArquivo = di.GetFiles().Select(fi => fi.Name).FirstOrDefault(name => name != "Thumbs.db");
+                string ultimoArquivo = di.GetFiles().Select(fi => fi.Name).FirstOrDefault();
                 ultimoArquivo = ultimoArquivo.Replace(".txt", string.Empty);
 
                 vetorArquivoPrimario = lerArquivoPorPosicao(caminhoArquivoLeitura, nomeArquivob + "1", 1, bytesToRead);
@@ -264,9 +268,9 @@ namespace PAAMergeSort.controllers
                 vetorResultadoCombinacao = concatenarVetores(vetorArquivoPrimario, vetorArquivoSecudario);
 
                 mergeSortController.mergeSortRecursivo(vetorResultadoCombinacao, 0, vetorResultadoCombinacao.Length - 1);
-                escreverNumerosArquivo(vetorResultadoCombinacao, caminhoArquivoLeitura + nomeArquivoProximo, "ordenado", 1);
-
-                // salvar arquivo resultante ordenado
+                escreverNumerosArquivo(vetorResultadoCombinacao, caminhoArquivoLeitura + nomeArquivoProximo, "arquivo-ordenado", 1);
+                Utils.logList.Add(">>>>>>>>>>>>>>>>>>>>>>>>>>    Ordenação Concluída com Sucesso !!!");
+                frmHomeScreen._timerCronometro.Stop();
 
             }
 
@@ -274,7 +278,6 @@ namespace PAAMergeSort.controllers
 
         public string leitura(int quantidadeDeCombinacoes, string caminhoArquivoLeitura, string nomeArquivo, string caminhoArquivoNaoCombinado, string nomeArquivoEscrita, byte[] bytesToRead)
         {
-
             int[] vetorArquivoPrimario;
             int[] vetorArquivoSecudario = null;
             int[] vetorResultadoCombinacao;
@@ -306,7 +309,6 @@ namespace PAAMergeSort.controllers
                         }
                         else
                         {
-
                             string arquivoACopiar = caminhoArquivoLeitura + nomeArquivo + (contadorArquivoPrimario + 2) + ".txt";
                             string[] nomeArquivoSplit = arquivoACopiar.Split('\\');
                             string destFile = caminhoArquivoLeitura + nomeArquivoEscrita + @"\" + nomeArquivoSplit[10];
@@ -323,20 +325,16 @@ namespace PAAMergeSort.controllers
                     {
                         if (!(caminhoArquivoNaoCombinado.Equals(string.Empty)))
                         {
-                            
-                            
                             string nomeArquivoNaoCombinado = caminhoArquivoNaoCombinado.Split('\\')[9].Replace(".txt", string.Empty);
                             vetorArquivoSecudario = lerArquivoPorPosicao(caminhoArquivoLeitura, @"\" + nomeArquivoNaoCombinado, posicaoAtual, bytesToRead);
                             caminhoArquivoNaoCombinado = string.Empty;
                         }
-
                     }
                     else
                     {
                         vetorArquivoSecudario = lerArquivoPorPosicao(caminhoArquivoLeitura, nomeArquivo + (contadorArquivoPrimario + 1), posicaoAtual, bytesToRead);
 
                     }
-
 
                 }
 
@@ -346,44 +344,35 @@ namespace PAAMergeSort.controllers
 
                 posicaoAtual++;
                 contadorArquivoPrimario = contadorArquivoPrimario + 2;
-
-
-
             }
 
             return caminhoArquivoNaoCombinado;
-
         }
 
 
         public int[] concatenarVetores(int[] vetorArquivoPrimario, int[] vetorArquivoSecudario)
         {
-
             int[] vetorResultadoCombinacao = new int[vetorArquivoPrimario.Length + vetorArquivoSecudario.Length];
             vetorArquivoPrimario.CopyTo(vetorResultadoCombinacao, 0);
             vetorArquivoSecudario.CopyTo(vetorResultadoCombinacao, vetorArquivoPrimario.Length);
             return vetorResultadoCombinacao;
-
         }
 
         public int[] lerArquivoPorPosicao(string caminhoArquivoLeitura, string nomeArquivo, int posicaoAtual, byte[] bytesToRead)
         {
             int[] vetorArquivoPrimario;
-            int numBytesToRead;  //(int)bytesToRead.Length;
+            int numBytesToRead; //(int)bytesToRead.Length;
             using (FileStream fsSource = new FileStream(caminhoArquivoLeitura + nomeArquivo + ".txt", FileMode.Open, FileAccess.Read))
             {
                 numBytesToRead = Convert.ToInt32(fsSource.Length);
                 //posicaoAtual = getPosicao(posicaoAtual, numBytesToRead);
                 fsSource.Seek(0, SeekOrigin.Begin);
                 int numBytesRead = 0;
-                
-             
-                if (fsSource.Length > bytesToRead.Length)
-                {
-                    bytesToRead =  new byte[fsSource.Length + 1];                   
-                }
-             
-                Console.WriteLine("tamanho do arquuivo: " + numBytesToRead);
+
+                bytesToRead = new byte[fsSource.Length];
+
+                Console.WriteLine("tamanho do arquivo: " + fsSource.Length);
+                Console.WriteLine("tamanho do numBytesToRead: " + numBytesToRead);
                 Console.WriteLine("tamanho do vetor de bytes: " + bytesToRead.Length);
 
                 while (numBytesToRead > 0)
@@ -420,6 +409,7 @@ namespace PAAMergeSort.controllers
             int posicaoIniciarLeitura = 0;
             switch (posicaoAtual)
             {
+
                 case 1:
                     Console.WriteLine("1 - Iniciar Leitura de: " + 0 + " ate " + numeroBytesLeitura);
                     //Console.WriteLine("posicaoAtual: " + 0);
@@ -433,7 +423,7 @@ namespace PAAMergeSort.controllers
                     break;
 
                 default:
-                    posicaoIniciarLeitura = ((numeroBytesLeitura * posicaoAtual) + 1);
+                    posicaoIniciarLeitura = ((numeroBytesLeitura * (posicaoAtual - 1)) + (posicaoAtual - 1));
                     Console.WriteLine(" D - Posicao Atual: " + numeroBytesLeitura);
                     Console.WriteLine("Iniciar Leitura de: " + posicaoIniciarLeitura + " ate " + (posicaoIniciarLeitura + numeroBytesLeitura));
                     break;
@@ -447,15 +437,28 @@ namespace PAAMergeSort.controllers
         {
             if ((numerosComSeparador.StartsWith("-") && (numerosComSeparador.EndsWith("-"))))
             {
+                Console.WriteLine("caso separador 1");
                 numerosComSeparador = numerosComSeparador.Substring(1, numerosComSeparador.Length - 2);
             }
             else if (numerosComSeparador.StartsWith("-"))
             {
-                numerosComSeparador = numerosComSeparador.Substring(1);
+
+                Console.WriteLine("caso separador 2");
+                numerosComSeparador = numerosComSeparador.Substring(1, numerosComSeparador.Length - 1);
             }
             else if (numerosComSeparador.EndsWith("-"))
             {
+
+                Console.WriteLine("caso separador 3");
                 numerosComSeparador = numerosComSeparador.Substring(0, numerosComSeparador.Length - 1);
+            }
+            else if (!((numerosComSeparador.StartsWith("-") && (numerosComSeparador.EndsWith("-")))))
+            {
+                Console.WriteLine("Cas nao inicia nem termina com -");
+            }
+            else
+            {
+                Console.WriteLine("Caso desconhecido");
             }
 
             return numerosComSeparador;

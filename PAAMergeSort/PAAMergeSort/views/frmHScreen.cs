@@ -28,14 +28,19 @@ using System.IO;
 using System.Net.Sockets;
 using PAAMergeSort.controllers;
 using System.Threading;
+using System.Diagnostics;
 
 namespace PAAMergeSort
 {
     public partial class frmHomeScreen : Form
     {
-        public static System.Timers.Timer _timer;
-        ArquivoController arquivoController = new ArquivoController();
-        Thread threadMergeSort;
+        public static System.Timers.Timer _timer = new System.Timers.Timer();
+        public static System.Timers.Timer _timerCronometro = new System.Timers.Timer();
+
+        public static Stopwatch cronometroWatch = new Stopwatch();
+
+        public ArquivoController arquivoController = new ArquivoController();
+        public Thread threadMergeSort;
 
         public frmHomeScreen()
         {
@@ -58,12 +63,36 @@ namespace PAAMergeSort
             lstbLog.SelectedIndex = this.lstbLog.Items.Count - 1;
         }
 
+        public  void atualiazarCronometroView(string timeElapsed)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<string>(atualiazarCronometroView), new object[] { timeElapsed });
+                return;
+            }
+
+            lblCronometro.Text = timeElapsed;
+        }
         public void updateLog()
         {
-            _timer = new System.Timers.Timer(2000); 
+            _timer = new System.Timers.Timer(10000); 
             _timer.Elapsed += new ElapsedEventHandler(_timer_Elapsed);
             _timer.Enabled = true; 
         }
+
+        public void atualizarCronometro()
+        {
+            _timerCronometro = new System.Timers.Timer(1000);
+            _timerCronometro.Elapsed += new ElapsedEventHandler(_timer_CronometroElapsed);
+            _timerCronometro.Enabled = true;
+        }
+
+        public void _timer_CronometroElapsed(object sender, ElapsedEventArgs e)
+        {
+            string timeElapsed = String.Format("{0:hh\\:mm\\:ss}", cronometroWatch.Elapsed);
+            atualiazarCronometroView(timeElapsed);
+        }
+
 
         public void _timer_Elapsed(object sender, ElapsedEventArgs e)
         {
@@ -127,6 +156,9 @@ namespace PAAMergeSort
         private void btnStart_Click(object sender, EventArgs e)
         {
             startThreadMergeSort();
+            cronometroWatch.Start();
+            atualizarCronometro();
+
         }
 
         public void iniciarMergeSort()
@@ -135,7 +167,7 @@ namespace PAAMergeSort
             {
                 if (validateParameters())
                 {
-                    criarArquivosByMB(txtArquiGB.Text.Trim(), txtTamMEM.Text.Trim(), txtArqOrd.Text);
+                   // criarArquivosByMB(txtArquiGB.Text.Trim(), txtTamMEM.Text.Trim(), txtArqOrd.Text);
                     //lerArquivoTodo();
                     lerEscreverArquivoByBytes(txtArqDes.Text.Trim(), txtArqOrd.Text.Trim(), txtArquiGB.Text.Trim(), txtTamMEM.Text.Trim(), txtK.Text.Trim());
                 }
@@ -150,6 +182,8 @@ namespace PAAMergeSort
             }
 
         }
+
+      
 
         public void startThreadMergeSort()
         {
@@ -212,6 +246,7 @@ namespace PAAMergeSort
         private void frmHomeScreen_Load(object sender, EventArgs e)
         {
             updateLog();
+            
         }
 
     
