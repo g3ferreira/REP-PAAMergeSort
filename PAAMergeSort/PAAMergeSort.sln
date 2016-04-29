@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PAAMergeSort", "PAAMergeSort\PAAMergeSort.csproj", "{7C94D82E-1771-4983-B74D-B1FDF260D39C}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{93F429D3-85D6-4463-83EE-5AD2B310C529}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,6 +15,8 @@ Global
 		{7C94D82E-1771-4983-B74D-B1FDF260D39C}.Debug|x86.Build.0 = Debug|x86
 		{7C94D82E-1771-4983-B74D-B1FDF260D39C}.Release|x86.ActiveCfg = Release|x86
 		{7C94D82E-1771-4983-B74D-B1FDF260D39C}.Release|x86.Build.0 = Release|x86
+		{93F429D3-85D6-4463-83EE-5AD2B310C529}.Debug|x86.ActiveCfg = Debug
+		{93F429D3-85D6-4463-83EE-5AD2B310C529}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
