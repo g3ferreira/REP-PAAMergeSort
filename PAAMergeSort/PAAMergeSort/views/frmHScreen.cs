@@ -38,7 +38,7 @@ namespace PAAMergeSort
         public static System.Timers.Timer _timerCronometro = new System.Timers.Timer();
 
         public static Stopwatch cronometroWatch = new Stopwatch();
-
+        public static string timeElapsed = string.Empty;
         public ArquivoController arquivoController = new ArquivoController();
         public Thread threadMergeSort;
 
@@ -47,8 +47,8 @@ namespace PAAMergeSort
             InitializeComponent();
             txtArqDes.Text = @"D:\genilson-ferreira\documents\faculdade\paa\trabalho\arquivos\arquivo-desordenado.txt";
             txtArqOrd.Text = @"D:\genilson-ferreira\documents\faculdade\paa\trabalho\arquivos";
-            txtTamMEM.Text = "100";
-            txtArquiGB.Text = "2";
+            txtTamMEM.Text = "5";
+            txtArquiGB.Text = "20";
             txtK.Text = "2";
         }
 
@@ -89,7 +89,7 @@ namespace PAAMergeSort
 
         public void _timer_CronometroElapsed(object sender, ElapsedEventArgs e)
         {
-            string timeElapsed = String.Format("{0:hh\\:mm\\:ss}", cronometroWatch.Elapsed);
+             timeElapsed = String.Format("{0:hh\\:mm\\:ss}", cronometroWatch.Elapsed);
             atualiazarCronometroView(timeElapsed);
         }
 
@@ -155,12 +155,23 @@ namespace PAAMergeSort
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            startThreadMergeSort();
-            cronometroWatch.Start();
-            atualizarCronometro();
+           
+            
+           startThreadMergeSort();
+           cronometroWatch.Start();
+           atualizarCronometro();
+           /* List<int> listar = new List<int>();
+            listar =   Utils.armazenar(Utils.getListN(1), Utils.getListN(2)); //a e c
+            listar = Utils.armazenar(Utils.getListN(2), listar);
+            Utils.listR.AddRange(listar);
+            foreach (var item in Utils.listR)
+            {
+                Console.WriteLine("numero: " + item);
+            }*/
 
         }
 
+       
         public void iniciarMergeSort()
         {
             try
@@ -248,6 +259,7 @@ namespace PAAMergeSort
             updateLog();
             
         }
+
 
     
 

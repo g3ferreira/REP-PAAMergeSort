@@ -107,9 +107,9 @@
             this.label6.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.Location = new System.Drawing.Point(634, 7);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(169, 22);
+            this.label6.Size = new System.Drawing.Size(142, 22);
             this.label6.TabIndex = 21;
-            this.label6.Text = "Tam. Aquivo (GB/MB)";
+            this.label6.Text = "Tam. Aquivo (MB)";
             // 
             // txtArquiGB
             // 
@@ -143,9 +143,9 @@
             this.label1.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(819, 7);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(155, 22);
+            this.label1.Size = new System.Drawing.Size(157, 22);
             this.label1.TabIndex = 17;
-            this.label1.Text = "Tam. Memória (KB)";
+            this.label1.Text = "Tam. Memória (MB)";
             // 
             // txtTamMEM
             // 

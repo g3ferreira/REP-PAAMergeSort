@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="controllers\ArquivoController.cs" />
+    <Compile Include="controllers\KViasController.cs" />
     <Compile Include="controllers\MergeSortController.cs" />
     <Compile Include="controllers\Utils.cs" />
     <Compile Include="Program.cs" />

@@ -1,0 +1,7 @@
+D:\genilson-ferreira\documents\faculdade\paa\trabalho\REP-PAAMergeSort\PAAMergeSort\PAAMergeSort\bin\Release\PAAMergeSort.exe
+D:\genilson-ferreira\documents\faculdade\paa\trabalho\REP-PAAMergeSort\PAAMergeSort\PAAMergeSort\bin\Release\PAAMergeSort.pdb
+D:\genilson-ferreira\documents\faculdade\paa\trabalho\REP-PAAMergeSort\PAAMergeSort\PAAMergeSort\obj\x86\Release\PAAMergeSort.Properties.Resources.resources
+D:\genilson-ferreira\documents\faculdade\paa\trabalho\REP-PAAMergeSort\PAAMergeSort\PAAMergeSort\obj\x86\Release\PAAMergeSort.frmHomeScreen.resources
+D:\genilson-ferreira\documents\faculdade\paa\trabalho\REP-PAAMergeSort\PAAMergeSort\PAAMergeSort\obj\x86\Release\PAAMergeSort.csproj.GenerateResource.Cache
+D:\genilson-ferreira\documents\faculdade\paa\trabalho\REP-PAAMergeSort\PAAMergeSort\PAAMergeSort\obj\x86\Release\PAAMergeSort.exe
+D:\genilson-ferreira\documents\faculdade\paa\trabalho\REP-PAAMergeSort\PAAMergeSort\PAAMergeSort\obj\x86\Release\PAAMergeSort.pdb
