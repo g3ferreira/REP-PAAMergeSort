@@ -157,9 +157,9 @@ namespace PAAMergeSort
         {
            
             
-           startThreadMergeSort();
-           cronometroWatch.Start();
-           atualizarCronometro();
+           startThreadMergeSort(); // metodo que inicia a Thread que executará a separação, ordenação e combinação dos arquivos.
+           cronometroWatch.Start(); 
+           atualizarCronometro(); // metodo que iniciar o cronometro na tela
            /* List<int> listar = new List<int>();
             listar =   Utils.armazenar(Utils.getListN(1), Utils.getListN(2)); //a e c
             listar = Utils.armazenar(Utils.getListN(2), listar);
@@ -209,7 +209,7 @@ namespace PAAMergeSort
         {
             //  arquivoController.criarArquivos(Convert.ToInt32(tamArquivo),Convert.ToInt32(tamanhoMB), caminhoPastaArquivo);
         }
-        public void lerEscreverArquivoByBytes(string caminhoArquivoLeitura, string caminhoArquivoEscrita, string tamArquivoLeitura, string tamArquivoSecundario, string KVetores)
+        public void lerEscreverArquivoByBytes(string caminhoArquivoLeitura, string caminhoArquivoEscrita, string tamArquivoLeitura, string tamArquivoSecundario, string KVetores) 
         {
             arquivoController.lerEscreverArquivo(caminhoArquivoLeitura, caminhoArquivoEscrita, tamArquivoLeitura, tamArquivoSecundario, KVetores);
         }

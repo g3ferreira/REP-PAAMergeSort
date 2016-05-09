@@ -8,11 +8,11 @@ namespace PAAMergeSort.controllers
 {
     public class ArquivoController
     {
-        static int posicaoArquivoA = 0;
-        static int posicaoArquivoB = 0;
+        static int posicaoArquivoA = 1;
+        static int posicaoArquivoB = 1;
         static int posicaoArquivoCombinado = 0;
-        static int tamanhoArquivoA = 1;
-        static int tamanhoArquivoB = 1;
+        static int tamanhoArquivoA = 0;
+        static int tamanhoArquivoB = 0;
 
 
 
@@ -54,6 +54,9 @@ namespace PAAMergeSort.controllers
 
         }
 
+        /* Este metodo irá executar a separação do arquivo principal e arquivos do tamanho disponivel de memória interna e depois combina-los
+         * 
+         */
 
         public void lerEscreverArquivo(string caminhoArquivoLeitura, string caminhoArquivoEscrita, string tamArquivoPrincipal, string tamArquivoSecundario, string KVetores)
         {
@@ -100,18 +103,21 @@ namespace PAAMergeSort.controllers
 
         }
 
+        /* Este metodo irá ler parte do arquivo principal desordenado e separa-lo em arquivos ordenados.
+         * 
+         */ 
         public void separarArquivoSecundarios(string caminhoArquivoLeitura, string caminhoArquivoEscrita, byte[] bytesToRead, int quantidadeArquivosSecudarios)
         {
             using (FileStream fsSource = new FileStream(caminhoArquivoLeitura, FileMode.Open, FileAccess.Read))
             {
                 Console.WriteLine("Tamanho do Arquivo: " + fsSource.Length);
+                Console.WriteLine("Bytes para ler: " + (int)bytesToRead.Length);
                 int numBytesToRead = (int)bytesToRead.Length;
-                int posicaoAtual = 0;
+                int posicaoAtual = 1;
 
-                for (int i = 1; i < quantidadeArquivosSecudarios; i++)
+                for (int i = 1; i <=quantidadeArquivosSecudarios; i++)
                 {
-
-                    posicaoAtual = getPosicao(i, numBytesToRead);
+                    posicaoAtual = getPosicao(posicaoAtual, numBytesToRead);
                     fsSource.Seek(posicaoAtual, SeekOrigin.Begin);
 
                     int numBytesRead = 0;
@@ -128,6 +134,7 @@ namespace PAAMergeSort.controllers
                         numBytesRead += n;
                         numBytesToRead -= n;
                     }
+                    
                     string result = string.Empty;
                     try
                     {
@@ -470,6 +477,13 @@ namespace PAAMergeSort.controllers
             return pilhaResultado;
 
         }
+
+        /**
+         *  Este metódo irá combinar os arquivos até ser gerado apenas uma arquivo ordenado
+         * 
+         * 
+         */ 
+
         public void combinarArquivosSecundariosByKVetores2(int quantidadeArquivosCriados, int KVetores, string caminhoArquivoLeitura, string caminhoArquivoEscrita, byte[] bytesToRead)
         {
             int pilhaMaior = 0;
@@ -579,9 +593,6 @@ namespace PAAMergeSort.controllers
                     // escreverArquivoPosicao(caminhoArquivoLeitura + "\\"
 
                 }
-
-
-
                 if (combinacoes > 1)
                 {
 
@@ -629,7 +640,7 @@ namespace PAAMergeSort.controllers
             int[] pilha;
             int numBytesToRead;
             string caminhoArquivoLeituraNome = caminhoArquivoLeitura + nomeArquivo + ".txt";
-            // Console.WriteLine("Arquivo A: " + caminhoArquivoLeituraNome);
+             Console.WriteLine("Arquivo A: " + caminhoArquivoLeituraNome);
             using (FileStream fsSource = new FileStream(caminhoArquivoLeituraNome, FileMode.Open, FileAccess.Read))
             {
                 tamanhoArquivoA = (int)fsSource.Length;
@@ -699,7 +710,7 @@ namespace PAAMergeSort.controllers
             int[] pilha;
             int numBytesToRead;
             string caminhoArquivoLeituraNome = caminhoArquivoLeitura + nomeArquivo + ".txt";
-            // Console.WriteLine("Arquivo A: " + caminhoArquivoLeituraNome);
+             Console.WriteLine("Arquivo A3: " + caminhoArquivoLeituraNome);
             using (FileStream fsSource = new FileStream(caminhoArquivoLeituraNome, FileMode.Open, FileAccess.Read))
             {
                 tamanhoArquivoA = (int)fsSource.Length;
@@ -784,7 +795,7 @@ namespace PAAMergeSort.controllers
             int numBytesToRead; //(int)bytesToRead.Length;
 
             string caminhoArquivoLeituraNome = caminhoArquivoLeitura + nomeArquivo + ".txt";
-            //Console.WriteLine("Arquivo B: " + caminhoArquivoLeituraNome);
+            Console.WriteLine("Arquivo B: " + caminhoArquivoLeituraNome);
             using (FileStream fsSource = new FileStream(caminhoArquivoLeituraNome, FileMode.Open, FileAccess.Read))
             {
                 tamanhoArquivoB = (int)fsSource.Length;
@@ -857,36 +868,8 @@ namespace PAAMergeSort.controllers
         {
             int posicaoIniciarLeitura = 0;
 
-            if (posicaoAtual == 1)
-            {
-                posicaoIniciarLeitura = 0;
-                //   Console.WriteLine("1 - Iniciar Leitura de: " + 0 + " ate " + numeroBytesLeitura);
-                //Console.WriteLine("posicaoAtual: " + 0);
-
-            }
-            else if (posicaoAtual == 2)
-            {
-                posicaoIniciarLeitura = posicaoAtual + 1;
-                //   Console.WriteLine("1 - Iniciar Leitura de: " + 0 + " ate " + numeroBytesLeitura);
-                //Console.WriteLine("posicaoAtual: " + 0);
-
-            }
-            else if (posicaoAtual == numeroBytesLeitura)
-            {
-                posicaoIniciarLeitura = numeroBytesLeitura + 1;
-                //   Console.WriteLine(" 2 - Posicao Atual: " + posicaoAtual);
-                //    Console.WriteLine("Iniciar Leitura de: " + posicaoIniciarLeitura + " ate " + (posicaoIniciarLeitura + numeroBytesLeitura));
-
-            }
-            else
-            {
-                posicaoIniciarLeitura = (posicaoAtual + numeroBytesLeitura + 1);
-                //  Console.WriteLine(" D - Posicao Atual: " + posicaoAtual);
-                //  Console.WriteLine("Iniciar Leitura de: " + posicaoIniciarLeitura + " ate " + (posicaoIniciarLeitura + numeroBytesLeitura));
-
-
-            }
-            /* switch (posicaoAtual)
+        
+             switch (posicaoAtual)
              {
 
                  case 1:
@@ -902,11 +885,11 @@ namespace PAAMergeSort.controllers
                      break;
 
                  default:
-                     posicaoIniciarLeitura = (posicaoAtual2 + numeroBytesLeitura + 1);
-                     Console.WriteLine(" D - Posicao Atual: " + numeroBytesLeitura);
+                     posicaoIniciarLeitura = (posicaoAtual + numeroBytesLeitura + 1);
+                     Console.WriteLine(" D - Posicao Atual: " + posicaoAtual);
                      Console.WriteLine("Iniciar Leitura de: " + posicaoIniciarLeitura + " ate " + (posicaoIniciarLeitura + numeroBytesLeitura));
                      break;
-             }*/
+             }
 
 
 
@@ -922,22 +905,22 @@ namespace PAAMergeSort.controllers
             if (posicaoAtual == 1)
             {
                 posicaoIniciarLeitura = 0;
-                //   Console.WriteLine("1 - Iniciar Leitura de: " + 0 + " ate " + numeroBytesLeitura);
+                  Console.WriteLine("1 - Iniciar Leitura de: " + 0 + " ate " + numeroBytesLeitura);
                 //Console.WriteLine("posicaoAtual: " + 0);
 
             }
             else if (posicaoAtual == numeroBytesLeitura)
             {
-                posicaoIniciarLeitura = numeroBytesLeitura + 1;
+                posicaoIniciarLeitura = posicaoAtual + 1;
                 //   Console.WriteLine(" 2 - Posicao Atual: " + posicaoAtual);
-                //    Console.WriteLine("Iniciar Leitura de: " + posicaoIniciarLeitura + " ate " + (posicaoIniciarLeitura + numeroBytesLeitura));
+                    Console.WriteLine("Iniciar Leitura de: " + posicaoIniciarLeitura + " ate " + (posicaoIniciarLeitura + numeroBytesLeitura));
 
             }
             else
             {
                 posicaoIniciarLeitura = (posicaoAtual + numeroBytesLeitura + 1);
                 //  Console.WriteLine(" D - Posicao Atual: " + posicaoAtual);
-                //  Console.WriteLine("Iniciar Leitura de: " + posicaoIniciarLeitura + " ate " + (posicaoIniciarLeitura + numeroBytesLeitura));
+                  Console.WriteLine("Iniciar Leitura de: " + posicaoIniciarLeitura + " ate " + (posicaoIniciarLeitura + numeroBytesLeitura));
 
 
             }
